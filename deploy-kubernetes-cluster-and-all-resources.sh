@@ -112,7 +112,7 @@ function deploy_kubernetes_resources() {
   echo "[INFO] Deploying image: $TEMP_IMAGE_TAG"
   cp user-service/user-deployment.yaml user-service/user-deployment-temp.yaml
   sed -i "s@CONTAINER_IMAGE@$TEMP_IMAGE_TAG@g" user-service/user-deployment-temp.yaml
-  kubectl apply -f user-service/user-deployment.yaml
+  kubectl apply -f user-service/user-deployment-temp.yaml
   rm user-service/user-deployment-temp.yaml
   kubectl apply -f user-service/user-service.yaml
 

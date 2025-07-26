@@ -63,7 +63,7 @@ function rollout_new_update() {
   echo "[INFO] Deploying image: $TEMP_IMAGE_TAG"
   cp user-service/user-deployment.yaml user-service/user-deployment-temp.yaml
   sed -i "s@CONTAINER_IMAGE@$TEMP_IMAGE_TAG@g" user-service/user-deployment-temp.yaml
-  kubectl apply -f user-service/user-deployment.yaml
+  kubectl apply -f user-service/user-deployment-temp.yaml
   rm user-service/user-deployment-temp.yaml
 
   echo "[INFO] Waiting for deployment rollout to complete..."
