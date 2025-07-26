@@ -22,9 +22,9 @@ This repository provides a complete setup to deploy a Spring Boot microservice a
 ├── new-update-deployment-pipeline.sh               # Only update microservice pipeline
 ├── nagp-namespace.yaml                             # Namespace
 ├── configmap/
-│   └── nagp-configmap.yaml                         # Spring Boot configs
+│   └── nagp-configmap.yaml                         # common config variables
 ├── nagp-secret/
-│   └── nagp-secret.yaml                            # DB credentials (base64)
+│   └── nagp-secret.yaml                            # application secrets (base64)
 ├── postgres/
 │   ├── postgres-headless-service.yaml              # Postgres Service definition
 │   └── postgres-statefulstate.yaml                 # StatefulSet + PVC
@@ -72,7 +72,7 @@ chmod +x new-update-deployment-pipeline.sh
 
 ### YAML Image Substitution
 
-- `CONTAINER_IMAGE` placeholder in deployment.yaml
+- `CONTAINER_IMAGE` placeholder in user-service/user-deployment.yaml
 - Replaced using:
 
 ```bash
@@ -101,10 +101,11 @@ Use the host from ingress to access your API.
 
 ## Prerequisites
 
-- GitHub account
-- Google Cloud SDK (`gcloud`) setup
-- Docker installed & authenticated with DockerHub
+- GitHub active account
 - Maven installed
+- Docker installed & authenticated with DockerHub
+- Google Cloud active account
+- Google Cloud SDK (`gcloud`) setup
 - Kubernetes CLI (`kubectl`) installed
 
 ---
