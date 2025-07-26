@@ -138,8 +138,7 @@ function wait_for_ingress() {
 # ---------------------- Execution ----------------------
 setup_gcloud_config
 clone_and_build_project
-IMAGE_TAG=$(build_and_push_docker_image)
-sed -i 's@CONTAINER_IMAGE@'"$IMAGE_TAGD"'@' user-service/user-deployment.yaml
+build_and_push_docker_image
 create_gke_cluster
 deploy_kubernetes_resources
 
