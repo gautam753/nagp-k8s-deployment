@@ -57,8 +57,7 @@ function build_and_push_docker_image() {
   docker logout
 
   echo "[INFO] Docker image pushed: $IMAGE_TAG"
-  popd > /dev/null
-  echo "$IMAGE_TAG"
+  popd
 }
 
 function create_gke_cluster() {
