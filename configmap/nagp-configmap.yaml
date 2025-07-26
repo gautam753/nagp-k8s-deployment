@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nagp-config-map
+  namespace: nagp-ns
+data:
+  PG_USER: nagpdbuser
+  DATASOURCE_URL: jdbc:postgresql://postgres-app-service:5432/nagpdb
+  DB_NAME: nagpdb
+  DB_SCHEMA_NAME: userschema

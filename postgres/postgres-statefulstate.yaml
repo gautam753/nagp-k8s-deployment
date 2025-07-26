@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-app-statefulstate
+  labels:
+    app: postgres-app
+  namespace: nagp-ns
+spec:
+  serviceName: "postgres-app-headless"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-app
+  template:
+    metadata:
+      name: postgres-app-pod
+      labels:
+        app: postgres-app
+    spec:
+      initContainers:
+        - name: init-schema
+          image: busybox
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              echo "Creating schema and granting privileges..."
+              cat <<EOF > /docker-entrypoint-initdb.d/init.sql
+              CREATE SCHEMA IF NOT EXISTS ${DB_SCHEMA_NAME} AUTHORIZATION ${PG_USER};
+              GRANT USAGE, CREATE ON SCHEMA ${DB_SCHEMA_NAME} TO ${PG_USER};
+              ALTER DEFAULT PRIVILEGES IN SCHEMA ${DB_SCHEMA_NAME} GRANT SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER ON TABLES TO ${PG_USER};
+              ALTER DEFAULT PRIVILEGES IN SCHEMA ${DB_SCHEMA_NAME} GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO ${PG_USER};
+              EOF
+          envFrom:
+            - configMapRef:
+                name: nagp-config-map
+          volumeMounts:
+            - name: init-sql
+              mountPath: /docker-entrypoint-initdb.d
+      containers:
+        - name: postgres-app-container
+          image: postgres:15
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: nagp-config-map
+                  key: DB_NAME
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: nagp-config-map
+                  key: PG_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: nagp-secret
+                  key: PG_PASSWORD
+            - name: PGDATA
+              value: /var/lib/postgresql/data/db
+          volumeMounts:
+            - name: postgres-data
+              mountPath: /var/lib/postgresql/data
+            - name: init-sql
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: init-sql
+          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi
+        storageClassName: standard

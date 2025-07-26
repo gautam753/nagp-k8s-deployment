@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-app-deployment
+  labels:
+    app: user-app
+  namespace: nagp-ns
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: user-app
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      name: user-app-pod
+      labels:
+        app: user-app
+    spec:
+      containers:
+      - name: user-app-container
+        image: CONTAINER_IMAGE
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8091
+        env:
+        - name: DATASOURCE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: nagp-config-map
+              key: DATASOURCE_URL
+        - name: DB_SCHEMA
+          valueFrom:
+            configMapKeyRef:
+              name: nagp-config-map
+              key: DB_SCHEMA_NAME
+        - name: DB_USER
+          valueFrom:
+            configMapKeyRef:
+              name: nagp-config-map
+              key: PG_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nagp-secret
+              key: PG_PASSWORD
+        - name: X_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: nagp-secret
+              key: X_API_KEY

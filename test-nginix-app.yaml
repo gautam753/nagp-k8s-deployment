@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-app-deployment
+  namespace: nagp-ns
+  labels:
+    app: nginx-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx-app
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: DATASOURCE_URL
+          valueFrom:
+            configMapKeyRef:
+              name: nagp-config-map
+              key: DATASOURCE_URL
+        - name: DB_SCHEMA
+          valueFrom:
+            configMapKeyRef:
+              name: nagp-config-map
+              key: DB_SCHEMA_NAME
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: nagp-secret
+              key: PG_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: nagp-secret
+              key: PG_PASSWORD
+        - name: X_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: nagp-secret
+              key: X_API_KEY
