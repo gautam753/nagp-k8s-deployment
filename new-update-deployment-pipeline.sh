@@ -24,6 +24,10 @@ function setup_gcloud_config() {
 }
 
 function clone_and_build_project() {
+  echo
+  read -p "Press Enter to Clone and Build project repo..."
+  echo
+
   mkdir "$TIMESTAMP" && chmod 777 "$TIMESTAMP"
   echo "[INFO] Created working directory: $TIMESTAMP"
   pushd "$TIMESTAMP"
@@ -41,6 +45,10 @@ function clone_and_build_project() {
 }
 
 function build_and_push_docker_image() {
+  echo
+  read -p "Press Enter to Build and Push Docker image to DockerHub..."
+  echo
+  
   pushd "$TIMESTAMP/project"
   COMMIT_ID=$(git rev-parse HEAD)
   IMAGE_TAG=$DOCKER_REPO:$COMMIT_ID
@@ -58,6 +66,10 @@ function build_and_push_docker_image() {
 }
 
 function rollout_new_update() {
+  echo
+  read -p "Press Enter to continue to the next step..." key
+  echo
+
   echo "[INFO] Deploying user service..."
   TEMP_IMAGE_TAG="$IMAGE_TAG"
   echo "[INFO] Deploying image: $TEMP_IMAGE_TAG"

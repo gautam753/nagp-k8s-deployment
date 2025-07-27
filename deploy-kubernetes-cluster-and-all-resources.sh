@@ -22,11 +22,19 @@ IMAGE_TAG=""
 
 # ---------------------- Functions ----------------------
 function setup_gcloud_config() {
+  read -p "Press Enter to configure Google Cloud Project and compute zone..."
+  echo
+  echo "[INFO] Configuring Google Cloud Project and compute zone..."
   gcloud config set project "$PROJECT_ID"
   gcloud config set compute/zone "$COMPUTE_ZONE"
+  echo "[INFO] Google Cloud Project and compute zone configured"
+  echo
 }
 
 function clone_and_build_project() {
+  echo
+  read -p "Press Enter to Clone and Build project code..."
+  echo
   mkdir "$TIMESTAMP" && chmod 777 "$TIMESTAMP"
   echo "[INFO] Created working directory: $TIMESTAMP"
   pushd "$TIMESTAMP"
@@ -38,12 +46,15 @@ function clone_and_build_project() {
   chmod 777 *
   mvn clean install
   chmod 777 target/*
-  echo "[INFO] Build complete"
+  echo "[INFO] Build completed"
   popd
   popd
 }
 
 function build_and_push_docker_image() {
+  echo
+  read -p "Press Enter to Build and Push docker image to DockerHub..."
+  echo
   pushd "$TIMESTAMP/project"
   COMMIT_ID=$(git rev-parse HEAD)
   IMAGE_TAG=$DOCKER_REPO:$COMMIT_ID
@@ -61,6 +72,9 @@ function build_and_push_docker_image() {
 }
 
 function create_gke_cluster() {
+  echo
+  read -p "Press Enter to create GKE cluster..."
+  echo
   gcloud beta container clusters create "$CLUSTER_NAME" \
     --project "$PROJECT_ID" \
     --zone "$COMPUTE_ZONE" \
@@ -91,6 +105,9 @@ function create_gke_cluster() {
 }
 
 function deploy_kubernetes_resources() {
+  echo
+  read -p "Press Enter to deploy kubernetes resources..."
+  echo
   echo "[INFO] Creating namespace..."
   kubectl apply -f nagp-namespace.yaml
 
@@ -119,9 +136,21 @@ function deploy_kubernetes_resources() {
   echo "[INFO] Waiting for user-app pod..."
   kubectl wait --for=condition=ready pod -l app=user-app -n "$NAMESPACE" --timeout=60s
 
+  echo
+  read -p "Press Enter to deploy Ingress..."
+  echo
+  
   echo "[INFO] Applying ingress..."
   kubectl apply -f ingress/nagp-ingress.yaml
   wait_for_ingress
+}
+
+function install_metrics_server() {
+  echo
+  read -p "Press Enter to install metrics server..."
+  echo
+  echo "[INFO] Installing metrics server..."
+  kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 }
 
 function wait_for_ingress() {
@@ -135,12 +164,18 @@ function wait_for_ingress() {
   kubectl get ingress -n "$NAMESPACE" -o wide
 }
 
+function install_metrics_server() {
+  echo "[INFO] Installing metrics server..."
+  kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+}
+
 # ---------------------- Execution ----------------------
 setup_gcloud_config
 clone_and_build_project
 build_and_push_docker_image
 create_gke_cluster
 deploy_kubernetes_resources
+install_metrics_server
 
 echo -e "\n[INFO] Deployment Summary:"
 kubectl get all -n "$NAMESPACE"
