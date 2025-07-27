@@ -79,7 +79,6 @@ function create_gke_cluster() {
     --project "$PROJECT_ID" \
     --zone "$COMPUTE_ZONE" \
     --tier standard \
-    --cluster-version "1.32.4-gke.1415000" \
     --release-channel "regular" \
     --machine-type "e2-medium" \
     --image-type "COS_CONTAINERD" \
