@@ -10,6 +10,9 @@ COMPUTE_ZONE=${COMPUTE_ZONE:-us-central1-a}  # default value if blank
 read -p "Enter Namespace [default: nagp-ns]: " NAMESPACE
 NAMESPACE=${NAMESPACE:-nagp-ns}
 
+read -p "Enter GKE Cluster Name to be created [default: nagp-demo-default-cluster]: " CLUSTER_NAME
+CLUSTER_NAME=${CLUSTER_NAME:-nagp-demo-cluster-v4}
+
 REPO_URL="https://github.com/gautam753/nagp-demo-user-service.git"
 DOCKER_USER_NAME="goutampaul"
 DOCKER_REPO="goutampaul/nagp-demo-user-service"
@@ -21,6 +24,8 @@ IMAGE_TAG=""
 function setup_gcloud_config() {
   gcloud config set project "$PROJECT_ID"
   gcloud config set compute/zone "$COMPUTE_ZONE"
+  CONTEXT_NAME="$PROJECT_ID"_"$COMPUTE_ZONE"_"$CLUSTER_NAME"
+  kubectl config set-context "$CONTEXT_NAME" --namespace="$NAMESPACE"
 }
 
 function clone_and_build_project() {
@@ -84,12 +89,16 @@ function rollout_new_update() {
   echo "[INFO] Waiting for user-app pod..."
   kubectl wait --for=condition=ready pod -l app=user-app -n "$NAMESPACE" --timeout=60s
 
-  kubectl apply -f user-service/user-service.yaml
+  #kubectl apply -f user-service/user-service.yaml
 }
 # ---------------------- Execution ----------------------
 setup_gcloud_config
 clone_and_build_project
 build_and_push_docker_image
+
+echo -e "\n[INFO] Deployment Summary before rollout new update:"
+kubectl get all -n "$NAMESPACE"
+
 rollout_new_update
 
 echo -e "\n[INFO] Deployment Summary:"
