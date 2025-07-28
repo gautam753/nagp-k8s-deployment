@@ -137,7 +137,7 @@ function deploy_kubernetes_resources() {
   kubectl apply -f user-service/user-service.yaml
 
   echo "[INFO] Waiting for user-app pod..."
-  kubectl wait --for=condition=ready pod -l app=user-app -n "$NAMESPACE" --timeout=60s
+  kubectl wait --for=condition=ready pod -l app=user-app -n "$NAMESPACE" --timeout=300s
 
   echo
   read -p "Press Enter to deploy Ingress..."
