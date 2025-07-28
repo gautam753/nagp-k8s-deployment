@@ -25,7 +25,7 @@ function setup_gcloud_config() {
   gcloud config set project "$PROJECT_ID"
   gcloud config set compute/zone "$COMPUTE_ZONE"
   CONTEXT_NAME="$PROJECT_ID"_"$COMPUTE_ZONE"_"$CLUSTER_NAME"
-  kubectl config set-context "$CONTEXT_NAME" --namespace="$NAMESPACE"
+  kubectl config use-context "$CONTEXT_NAME" --namespace="$NAMESPACE"
 }
 
 function clone_and_build_project() {

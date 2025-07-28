@@ -112,6 +112,7 @@ function deploy_kubernetes_resources() {
 
   CONTEXT_NAME="$PROJECT_ID"_"$COMPUTE_ZONE"_"$CLUSTER_NAME"
   kubectl config set-context "$CONTEXT_NAME" --namespace="$NAMESPACE"
+  kubectl config use-context "$CONTEXT_NAME" --namespace="$NAMESPACE"
 
   echo "[INFO] Installing NGINX ingress controller..."
   kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.9.4/deploy/static/provider/cloud/deploy.yaml

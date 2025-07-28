@@ -12,6 +12,9 @@ spec:
       app: user-app
   strategy:
     type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   template:
     metadata:
       name: user-app-pod
@@ -24,12 +27,20 @@ spec:
         resources:
           requests:
             memory: "256Mi"
-            cpu: "50m"
+            cpu: "250m"
           limits:
             memory: "512Mi"
-            cpu: "100m"
+            cpu: "500m"
         ports:
         - containerPort: 8091
+        readinessProbe:
+          httpGet:
+            path: /v1/user-service/actuator/health
+            port: 8091
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 10
+          timeoutSeconds: 5
         env:
         - name: DATASOURCE_URL
           valueFrom:
