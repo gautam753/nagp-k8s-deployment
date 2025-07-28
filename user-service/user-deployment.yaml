@@ -23,11 +23,11 @@ spec:
         image: CONTAINER_IMAGE
         resources:
           requests:
-            memory: "200Mi"
-            cpu: "10m"
-          limits:
-            memory: "400Mi"
+            memory: "256Mi"
             cpu: "50m"
+          limits:
+            memory: "512Mi"
+            cpu: "100m"
         ports:
         - containerPort: 8091
         env:

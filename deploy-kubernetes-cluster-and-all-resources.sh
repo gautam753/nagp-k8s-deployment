@@ -174,7 +174,7 @@ clone_and_build_project
 build_and_push_docker_image
 create_gke_cluster
 deploy_kubernetes_resources
-install_metrics_server
+#install_metrics_server
 
 echo -e "\n[INFO] Deployment Summary:"
 kubectl get all -n "$NAMESPACE"
