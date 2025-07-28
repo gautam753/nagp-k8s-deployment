@@ -72,7 +72,7 @@ function build_and_push_docker_image() {
 
 function rollout_new_update() {
   echo
-  read -p "Press Enter to continue to the next step..." key
+  read -p "Press Enter to deploy new update..." key
   echo
 
   echo "[INFO] Deploying user service..."
@@ -87,7 +87,7 @@ function rollout_new_update() {
   kubectl rollout status deployment/user-app-deployment -n "$NAMESPACE" --timeout=60s
 
   echo "[INFO] Waiting for user-app pod..."
-  kubectl wait --for=condition=ready pod -l app=user-app -n "$NAMESPACE" --timeout=60s
+  kubectl wait --for=condition=ready pod -l app=user-app -n "$NAMESPACE" --timeout=420s
 
   #kubectl apply -f user-service/user-service.yaml
 }

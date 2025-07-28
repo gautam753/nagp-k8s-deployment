@@ -18,6 +18,9 @@
     kubectl port-forward svc/postgres-app-service -n nagp-ns 5432:5432
     sudo apt update && sudo apt install postgresql-client -y
     psql -h 127.0.0.1 -U nagpdbuser -d nagpdb
+    \dn
+    \dt userschema.*
+    select * from userschema.users;
 
 - **Extract secret runtime:** kubectl get secret nagp-secret -n nagp-ns -o jsonpath="{.data.PG_USER}" | base64 -d
 
