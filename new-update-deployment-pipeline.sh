@@ -84,7 +84,7 @@ function rollout_new_update() {
   rm user-service/user-deployment-temp.yaml
 
   echo "[INFO] Waiting for deployment rollout to complete..."
-  kubectl rollout status deployment/user-app-deployment -n "$NAMESPACE" --timeout=60s
+  kubectl rollout status deployment/user-app-deployment -n "$NAMESPACE" --timeout=420s
 
   echo "[INFO] Waiting for user-app pod..."
   kubectl wait --for=condition=ready pod -l app=user-app -n "$NAMESPACE" --timeout=420s
