@@ -84,7 +84,7 @@ function create_gke_cluster() {
     --image-type "COS_CONTAINERD" \
     --disk-type "pd-standard" \
     --disk-size "20" \
-    --num-nodes "5" \
+    --num-nodes "4" \
     --enable-ip-alias \
     --enable-autoupgrade \
     --enable-autorepair \

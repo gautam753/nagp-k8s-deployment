@@ -8,15 +8,15 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: user-app-deployment
-  minReplicas: 4
-  maxReplicas: 5
+  minReplicas: 2
+  maxReplicas: 4
   metrics:
     - type: Resource
       resource:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 10
+          averageUtilization: 40
     - type: Resource
       resource:
         name: memory
