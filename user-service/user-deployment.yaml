@@ -26,11 +26,11 @@ spec:
         image: CONTAINER_IMAGE
         resources:
           requests:
-            memory: "512Mi"
+            memory: "300Mi"
             cpu: "250m"
           limits:
-            memory: "512Mi"
-            cpu: "250m"
+            memory: "1024Mi"
+            cpu: "500m"
         ports:
         - containerPort: 8091
         readinessProbe:
@@ -42,6 +42,8 @@ spec:
           failureThreshold: 10
           timeoutSeconds: 5
         env:
+        - name: JAVA_TOOL_OPTIONS
+          value: -Xms250m -Xmx950m -XX:+ExitOnOutOfMemoryError
         - name: DATASOURCE_URL
           valueFrom:
             configMapKeyRef:
