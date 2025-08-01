@@ -43,6 +43,7 @@ This repository provides a complete setup to deploy a Spring Boot microservice a
 .
 ├── readme.md
 ├── helper-doc.md
+├── dockerfile
 ├── api-spec.yaml
 ├── deploy-kubernetes-cluster-and-all-resources.sh
 ├── new-update-deployment-pipeline.sh
