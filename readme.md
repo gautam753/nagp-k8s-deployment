@@ -9,7 +9,8 @@ This repository provides a complete setup to deploy a Spring Boot microservice a
 - **Kubernetes manifest Repo:** https://github.com/gautam753/nagp-k8s-deployment.git  
 - **User-service Code Repo:** https://github.com/gautam753/nagp-demo-user-service.git  
 - **Docker Hub Repo:** https://hub.docker.com/repository/docker/goutampaul/nagp-demo-user-service/general  
-- **API Spec (Swagger UI):** http://nagp-demo.example.com/v1/user-service/swagger-ui/index.html
+- **API Spec (Swagger UI):** http://nagp-demo.example.com/v1/user-service/swagger-ui/index.html or refer to nagp-k8s-cluster-setup > api-spec.yaml
+- **X-API-KEY:** nagpH3ZHZkjIG9CtFtircFsniAwCAbr2RXID5pNDrlJkPhQ0IxrerWJRiaB6aSUD
 
 ---
 
@@ -42,6 +43,7 @@ This repository provides a complete setup to deploy a Spring Boot microservice a
 .
 ├── readme.md
 ├── helper-doc.md
+├── api-spec.yaml
 ├── deploy-kubernetes-cluster-and-all-resources.sh
 ├── new-update-deployment-pipeline.sh
 ├── nagp-namespace.yaml
@@ -85,7 +87,7 @@ This guide provides step-by-step instructions to set up a Kubernetes (GKE) clust
 - Prompts the user for:
   - GCP Project ID
   - Compute Zone (default: `us-central1-a`)
-  - GKE Cluster Name (default: `nagp-demo-cluster-v4`)
+  - GKE Cluster Name (default: `nagp-demo-default-cluster`)
   - Kubernetes Namespace (default: `nagp-ns`)
 - Configures Google Cloud CLI with the provided project and zone.
 
@@ -112,17 +114,17 @@ This guide provides step-by-step instructions to set up a Kubernetes (GKE) clust
 - Installs the NGINX Ingress Controller.
 - Sets the Kubernetes context to the specified namespace.
 - Applies:
-  - ConfigMap for environment configuration
-  - Secret for sensitive credentials
-  - PostgreSQL StatefulSet and headless service
-  - User-service deployment and service
+    - ConfigMap for environment configuration
+    - Secret for sensitive credentials
+    - PostgreSQL StatefulSet and headless service
+    - User-service deployment and service
 - Waits for the user-service pod to become ready.
 - Applies the Ingress resource and waits for external IP allocation.
 
 #### Step 6: Deployment Summary
 - Prints the status of all deployed resources using:
   ```bash
-  kubectl get all -n <namespace>
+  kubectl get all -n nagp-ns
   ```
 
 ---
@@ -167,7 +169,7 @@ This section describes how to deploy updates to the user-service application usi
 #### Step 5: Deployment Summary
 - Prints the status of all deployed resources using:
   ```bash
-  kubectl get all -n <namespace>
+  kubectl get all -n nagp-ns
   ```
 
 ---

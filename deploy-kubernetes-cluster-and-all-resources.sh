@@ -117,15 +117,31 @@ function deploy_kubernetes_resources() {
   kubectl config set-context "$CONTEXT_NAME" --namespace="$NAMESPACE"
   kubectl config use-context "$CONTEXT_NAME" --namespace="$NAMESPACE"
 
+  echo
+  read -p "Press Enter to deploy configMap..."
+  echo
+
   echo "[INFO] Applying ConfigMap..."
   kubectl apply -f configmap/nagp-configmap.yaml
+
+  echo
+  read -p "Press Enter to deploy secret..."
+  echo
 
   echo "[INFO] Creating secret..."
   kubectl apply -f nagp-secret/nagp-secret.yaml
 
+  echo
+  read -p "Press Enter to deploy postgres headless service..."
+  echo
+
   echo "[INFO] Deploying PostgreSQL..."
   kubectl apply -f postgres/postgres-statefulstate.yaml
   kubectl apply -f postgres/postgres-headless-service.yaml
+
+  echo
+  read -p "Press Enter to deploy user-service..."
+  echo
 
   echo "[INFO] Deploying user service..."
   TEMP_IMAGE_TAG="$IMAGE_TAG"
@@ -137,7 +153,7 @@ function deploy_kubernetes_resources() {
   kubectl apply -f user-service/user-service.yaml
 
   echo "[INFO] Waiting for user-app pod..."
-  kubectl wait --for=condition=ready pod -l app=user-app -n "$NAMESPACE" --timeout=300s
+  kubectl wait --for=condition=ready pod -l app=user-app -n "$NAMESPACE" --timeout=420s
 
   echo
   read -p "Press Enter to deploy Ingress..."

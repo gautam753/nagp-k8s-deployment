@@ -6,7 +6,7 @@
 
 - **install metric server:** kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
-- **Scale deployment**: kubectl scale deployment user-app-deployment --replicas=1 -n nagp-ns
+- **Scale deployment**: kubectl scale deployment user-app-deployment --replicas=2 -n nagp-ns
 
 - **apply HPA**: kubectl apply -f hpa/nagp-hpa.yaml
 
