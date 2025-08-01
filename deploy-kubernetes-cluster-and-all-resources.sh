@@ -148,14 +148,6 @@ function deploy_kubernetes_resources() {
   wait_for_ingress
 }
 
-function install_metrics_server() {
-  echo
-  read -p "Press Enter to install metrics server..."
-  echo
-  echo "[INFO] Installing metrics server..."
-  kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
-}
-
 function wait_for_ingress() {
   echo "[INFO] Waiting for external IP allocation..."
   until kubectl get ingress nagp-ingress -n "$NAMESPACE" -o jsonpath='{.status.loadBalancer.ingress[0].ip}' | grep -q '[0-9]'; do
@@ -167,18 +159,12 @@ function wait_for_ingress() {
   kubectl get ingress -n "$NAMESPACE" -o wide
 }
 
-function install_metrics_server() {
-  echo "[INFO] Installing metrics server..."
-  kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
-}
-
 # ---------------------- Execution ----------------------
 setup_gcloud_config
 clone_and_build_project
 build_and_push_docker_image
 create_gke_cluster
 deploy_kubernetes_resources
-#install_metrics_server
 
 echo -e "\n[INFO] Deployment Summary:"
 kubectl get all -n "$NAMESPACE"
