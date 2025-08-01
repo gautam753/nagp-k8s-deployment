@@ -107,8 +107,13 @@ function deploy_kubernetes_resources() {
   echo
   read -p "Press Enter to deploy kubernetes resources..."
   echo
+
   echo "[INFO] Creating namespace..."
   kubectl apply -f nagp-namespace.yaml
+
+  echo
+  read -p "Press Enter to install Ingress NGINX Controller..."
+  echo
 
   echo "[INFO] Installing NGINX ingress controller..."
   kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.9.4/deploy/static/provider/cloud/deploy.yaml
