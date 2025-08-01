@@ -1,0 +1,150 @@
+openapi: 3.0.1
+info:
+  title: user-service
+  description: Demo Spring Boot Microservice with PostgreSQL, Docker, Swagger, and API Key security
+  version: "1.0"
+servers:
+  - url: http://nagp-demo.example.com/v1/user-service
+    description: Generated server url
+security:
+  - ApiKeyAuth: []
+paths:
+  /api/users/{id}:
+    get:
+      tags: [user-controller]
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/CommonResponseModel"
+    put:
+      tags: [user-controller]
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/CommonResponseModel"
+    delete:
+      tags: [user-controller]
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+  /api/users:
+    get:
+      tags: [user-controller]
+      operationId: getAllUsers
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/CommonResponseModel"
+    post:
+      tags: [user-controller]
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                $ref: "#/components/schemas/CommonResponseModel"
+  /api/users/consume-memory:
+    get:
+      tags: [user-controller]
+      operationId: consumeMemory
+      parameters:
+        - name: mb
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 100
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+  /api/users/clear-memory:
+    get:
+      tags: [user-controller]
+      operationId: clearMemory
+      responses:
+        "200":
+          description: OK
+          content:
+            "*/*":
+              schema:
+                type: string
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        email:
+          type: string
+    CommonResponseModel:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/User"
+        userDetail:
+          $ref: "#/components/schemas/User"
+        podName:
+          type: string
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: X-API-KEY
+      in: header
