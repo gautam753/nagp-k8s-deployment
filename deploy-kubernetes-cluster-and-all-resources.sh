@@ -58,18 +58,23 @@ function build_and_push_docker_image() {
   pushd "$TIMESTAMP/project"
   COMMIT_ID=$(git rev-parse HEAD)
   IMAGE_TAG=$DOCKER_REPO:$COMMIT_ID
-  docker login -u "$DOCKER_USER_NAME"
+  
+  # Commenting out below line as it require dockerhub access token. Directly using existing image from dockerHube which is pushed during video recording, in method 'deploy_kubernetes_resources()'
+  # docker login -u "$DOCKER_USER_NAME"
 
   docker build -t "$IMAGE_TAG" .
   docker tag "$IMAGE_TAG" "$DOCKER_REPO:latest"
 
-  docker push "$IMAGE_TAG"
-  docker push "$DOCKER_REPO:latest"
-  docker logout
+  # Commenting out below lines as it require dockerhub access token. Directly using existing image from dockerHube which is pushed during video recording, in method 'deploy_kubernetes_resources()'
+  # docker push "$IMAGE_TAG"
+  # docker push "$DOCKER_REPO:latest"
+  # docker logout
 
   echo "[INFO] Docker image pushed: $IMAGE_TAG"
   popd
 }
+
+
 
 function create_gke_cluster() {
   echo
@@ -149,7 +154,8 @@ function deploy_kubernetes_resources() {
   echo
 
   echo "[INFO] Deploying user service..."
-  TEMP_IMAGE_TAG="$IMAGE_TAG"
+  # using existing image from dockerHube which is pushed during video recording
+  TEMP_IMAGE_TAG="goutampaul/nagp-demo-user-service:a89279e157d806bef67fcc7732448b8e7f05b91a"
   echo "[INFO] Deploying image: $TEMP_IMAGE_TAG"
   cp user-service/user-deployment.yaml user-service/user-deployment-temp.yaml
   sed -i "s@CONTAINER_IMAGE@$TEMP_IMAGE_TAG@g" user-service/user-deployment-temp.yaml
